@@ -1,0 +1,9 @@
+AWS_ACCESS_KEY = ""
+
+AWS_SECRET_KEY = ""
+
+AWS_AMI = ""
+
+AWS_INSTANCE_TYPE = ""
+
+
