@@ -1,0 +1,17 @@
+---
+- hosts: tomcat
+  become: yes
+  become_user: ubuntu
+  tasks:
+  - name: 'Create directory'
+    file:
+     path: /opt/tomcat
+     state: directory
+  - name: 'Deploy war file'
+    copy:
+     src: /var/lib/jenkins/workspace/spring/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar
+     dest: /opt/tomcat/ 
+  - name: 'Run JAR file'
+    shell: java -jar /var/lib/jenkins/workspace/spring/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar
+
+

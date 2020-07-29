@@ -84,10 +84,10 @@ resource "aws_instance" "public_instance" {
     instance_type = var.AWS_INSTANCE_TYPE
     key_name      = aws_key_pair.my_key.key_name
     vpc_security_group_ids = [aws_security_group.nat_security_gp.id]
-    subnet_id = "aws_subnet.public_subnet.id"
+    subnet_id = aws_subnet.public_subnet.id
     associate_public_ip_address = true
     source_dest_check = false
-    user_data = "data.template_file.user_data.rendered"
+    user_data = data.template_file.user_data.rendered
 
     tags= {
         Name = "Public-EC2"
@@ -102,9 +102,9 @@ data "template_file" "user_data" {
 /**********************Public Subnet*****************/
 
 resource "aws_subnet" "public_subnet" {
-    vpc_id = "aws_vpc.default.id"
+    vpc_id = aws_vpc.default.id
 
-    cidr_block = "var.public_subnet_cidr"
+    cidr_block = var.public_subnet_cidr
     availability_zone = "ap-south-1a"
 
     tags= {
@@ -113,11 +113,11 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_route_table" "public_RT" {
-    vpc_id = "aws_vpc.default.id"
+    vpc_id = aws_vpc.default.id
 
     route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = "aws_internet_gateway.default.id"
+        gateway_id = aws_internet_gateway.default.id
     }
 
     tags= {
@@ -126,8 +126,8 @@ resource "aws_route_table" "public_RT" {
 }
 
 resource "aws_route_table_association" "public_RT_association" {
-    subnet_id = "aws_subnet.public_subnet.id"
-    route_table_id = "aws_route_table.public_RT.id"
+    subnet_id = aws_subnet.public_subnet.id
+    route_table_id = aws_route_table.public_RT.id
 }
 
 /***********************Private Subnet*********************/
@@ -162,12 +162,12 @@ resource "aws_nat_gateway" "nat_gateway" {
 }
 
 resource "aws_route_table" "private_RT" {
-    vpc_id = "aws_vpc.default.id"
+    vpc_id = aws_vpc.default.id
 
     route {
         cidr_block = "0.0.0.0/0"
 #        instance_id = "aws_instance.public_instance.id"
-	nat_gateway_id = "aws_nat_gateway.nat_gateway.id"
+	nat_gateway_id = aws_nat_gateway.nat_gateway.id
 
     }
 
@@ -177,8 +177,8 @@ resource "aws_route_table" "private_RT" {
 }
 
 resource "aws_route_table_association" "private_RT_association" {
-    subnet_id = "aws_subnet.private_subnet.id"
-    route_table_id = "aws_route_table.private_RT.id"
+    subnet_id = aws_subnet.private_subnet.id
+    route_table_id = aws_route_table.private_RT.id
 }
 
 

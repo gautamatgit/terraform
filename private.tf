@@ -2,7 +2,7 @@
 
 resource "aws_security_group" "private_SG" {
     name = "private_EC2_SG"
-    vpc_id = "aws_vpc.default.id"
+    vpc_id = aws_vpc.default.id
     
     ingress {
         from_port = 22
